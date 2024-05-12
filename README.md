@@ -9,37 +9,10 @@ What's Inside?
         and application accessibility based on a variety of factors and displaying it in a visually appealling dashboard.
         Skills Used: Spreadsheets, Data Cleaning, Dashboards, Analysis
 
-    Project 2: Exploratory Data Analysis of COVID-19 Trends
-        Description: An in-depth analysis of global COVID-19 data to visualize trends and patterns over time.
-        Skills Used: R (ggplot2), Jupyter Notebooks
-
-    Project 3: Fraud Detection Using Machine Learning
-        Description: Leveraging supervised learning techniques to detect fraudulent transactions in a financial dataset.
-        Skills Used: Python (NumPy, Pandas, Scikit-Learn)
-        
-    Project 1: Predictive Analytics in Retail
-        Description: This project dives into customer segmentation and predictive modeling to optimize marketing strategies for a retail client.
-        Skills Used: Python (Pandas, Scikit-Learn), SQL, Tableau
-
-    Project 2: Exploratory Data Analysis of COVID-19 Trends
-        Description: An in-depth analysis of global COVID-19 data to visualize trends and patterns over time.
-        Skills Used: R (ggplot2), Jupyter Notebooks
-
-    Project 3: Fraud Detection Using Machine Learning
-        Description: Leveraging supervised learning techniques to detect fraudulent transactions in a financial dataset.
-        Skills Used: Python (NumPy, Pandas, Scikit-Learn)
-        
-    Project 1: Predictive Analytics in Retail
-        Description: This project dives into customer segmentation and predictive modeling to optimize marketing strategies for a retail client.
-        Skills Used: Python (Pandas, Scikit-Learn), SQL, Tableau
-
-    Project 2: Exploratory Data Analysis of COVID-19 Trends
-        Description: An in-depth analysis of global COVID-19 data to visualize trends and patterns over time.
-        Skills Used: R (ggplot2), Jupyter Notebooks
-
-    Project 3: Fraud Detection Using Machine Learning
-        Description: Leveraging supervised learning techniques to detect fraudulent transactions in a financial dataset.
-        Skills Used: Python (NumPy, Pandas, Scikit-Learn)
+    Project 2: Movie Dataset Data Cleaning
+        Description: A comprehensive data cleaning to mitigate erroneous, missing, or inconsistent data. This is performed using
+        data formatting, checking for data duplicates, data consistency across fields and improving data readability.
+        Skills Used: Spreadsheets, Functions, Data Formatting & Cleaning
 
 ## Why Explore This Portfolio?
 
