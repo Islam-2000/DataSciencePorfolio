@@ -14,6 +14,10 @@ What's Inside?
         data formatting, checking for data duplicates, data consistency across fields and improving data readability.
         Skills Used: Spreadsheets, Functions, Data Formatting & Cleaning
 
+    Project 3: English Premier League Results Analysis
+        Description: The purpose of this project is to use SQL to explore EPL data and gain a deeper understanding of the data, as well as preparing and cleaning the data if needed.
+        Skills Used: SQL, MySQL, Exploratory Data Analysis (EDA), Data Formatting & Cleaning
+
 ## Why Explore This Portfolio?
 
     Insights: Gain insights into real-world data problems and solutions.
