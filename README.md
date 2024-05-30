@@ -10,14 +10,20 @@ What's Inside?
         Skills Used: Spreadsheets, Data Cleaning, Dashboards, Analysis
 
     Project 2: Movie Dataset Data Cleaning
-        Description: A comprehensive data cleaning to mitigate erroneous, missing, or inconsistent data. This is performed using
+        A comprehensive data cleaning to mitigate erroneous, missing, or inconsistent data. This is performed using
         data formatting, checking for data duplicates, data consistency across fields and improving data readability.
         Skills Used: Spreadsheets, Functions, Data Formatting & Cleaning
 
     Project 3: English Premier League Results Analysis
-        Description: The purpose of this project is to use SQL to explore EPL data and gain a deeper understanding of the data, as well as preparing and cleaning the data if needed.
+        The purpose of this project is to use SQL to explore EPL data and gain a deeper understanding of the data, as well as preparing and cleaning the data if needed.
         Skills Used: SQL, MySQL, Exploratory Data Analysis (EDA), Data Formatting & Cleaning
 
+    Project 4: Employee Turnover Analysis 
+        A project that uses SQL (MySQL) to explore data concerning companies and the number of laid off employees. SQL is used to explore the data, format it, and clean it in preparation to be 
+        exported to Google Sheets for analysis and building a comprehensive dashboard.
+        Skills Used: SQL, MySQL, Exploratory Data Analysis (EDA), Data Cleaning, Data Analysis, Dashboard Design
+
+        
 ## Why Explore This Portfolio?
 
     Insights: Gain insights into real-world data problems and solutions.
