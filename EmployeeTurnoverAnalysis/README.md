@@ -16,4 +16,4 @@ The purpose of this project is to use SQL to explore the data, and then prepare 
 
 
 ### Highlights
-![Dashboard](https://github.com/Islam-2000/ProjectsPortfolio/assets/71960394/9ec09443-c2a1-4f3f-a502-e3bd745572d6)
+![Dashboard](https://github.com/Islam-2000/DataSciencePorfolio/assets/71960394/c87e5bce-bdc4-43b4-ac51-5d5eb2a36bf2)
