@@ -1,0 +1,536 @@
+---
+title: "Code"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+```{r}
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("corrplot")
+install.packages("car")
+install.packages("shiny")
+install.packages("shinydashboard")
+install.packages("MASS")
+```
+
+```{r}
+library("tidyverse")
+library("shiny")
+library("shinydashboard")
+library("car")
+library("corrplot")
+library("ggplot2")
+library("MASS")
+```
+
+## Reading dataset
+```{r}
+library(readr)
+tracks_features <- read_csv("archive/tracks_features.csv")
+```
+
+## Adding data into a dataframe
+```{r}
+musicData <- data.frame(tracks_features)
+```
+
+## Using random sampling to select 5000 observations from the dataset for computational limitations
+```{r}
+library(dplyr)
+set.seed(12345)  
+musicData <- sample_n(musicData, 5000, replace = FALSE, prob = NULL)
+musicData
+```
+
+## Observing variable information
+```{r}
+library("tidyverse")
+str(musicData)
+```
+
+
+## Data exploration, univariate box plots
+```{r}
+boxplot(musicData$danceability)
+boxplot(musicData$energy)
+boxplot(musicData$key)
+boxplot(musicData$loudness)
+boxplot(musicData$speechiness)
+boxplot(musicData$acousticness)
+boxplot(musicData$instrumentalness)
+boxplot(musicData$liveness)
+boxplot(musicData$valence)
+boxplot(musicData$tempo)
+
+```
+
+## Univariate histograms to track distributions
+```{r}
+hist(musicData$danceability)
+hist(musicData$energy)
+hist(musicData$key)
+hist(musicData$loudness)
+hist(musicData$speechiness)
+hist(musicData$acousticness)
+hist(musicData$instrumentalness)
+hist(musicData$liveness)
+hist(musicData$valence)
+hist(musicData$tempo)
+```
+
+
+## Covariance matrix 
+```{r}
+library("tidyverse")
+numeric_features <- sapply(musicData, is.numeric)
+music_num <- musicData[numeric_features]
+cov(music_num)
+```
+
+## Correlation matrix
+```{r}
+library("tidyverse")
+numeric_features <- sapply(musicData, is.numeric)
+music_num <- musicData[numeric_features]
+cors <- cor(music_num)
+corrplot(cors, method = "number")
+```
+
+## Discriminant analysis 
+```{r}
+music_num <- music_num[ , c("key",    # Reorder data frame
+                       names(music_num)[names(music_num) != "key"])]
+                     # Print updated data frame
+music_num <- music_num[ -c(2, 3, 14, 15, 16) ]
+music_num
+```
+
+```{r}
+music_num[, -1] <- scale(music_num[, -1])
+music_num
+```
+
+```{r}
+apply(music_num[, -1], 2, mean)
+```
+
+```{r}
+apply(music_num[, -1], 2, sd)
+```
+
+## Train Test Split
+```{r}
+set.seed(1)
+
+# 70% for training 30% for test 
+sample <- sample(c(TRUE, FALSE), nrow(music_num), replace = TRUE, prob = c(0.7, 0.3))
+train <- music_num[sample, ]
+test <- music_num[!sample, ]
+train
+test
+
+```
+
+## Linear Discriminant Analysis
+```{r}
+model <- lda(train$key~., data = train)
+model
+```
+
+```{r}
+predicted <- predict(model, test)
+names(predicted)
+```
+```{r}
+head(predicted$class)
+```
+```{r}
+head(predicted$posterior)
+```
+```{r}
+head(predicted$x)
+```
+
+```{r}
+mean(predicted$class==test$key)
+```
+
+## Hierarchical clustering
+
+```{r}
+install.packages("factoextra") 
+install.packages("FactoMineR")
+```
+
+
+```{r}
+library(factoextra)
+library(FactoMineR)
+library(cluster)
+```
+
+
+
+```{r}
+music_num_for_clustering <- music_num
+
+key_label <- music_num_for_clustering$key
+
+music_num_for_clustering$key <- NULL
+music_num_for_clustering
+```
+
+
+
+```{r}
+# Dissimilarity matrix
+d <- dist(music_num_for_clustering, method = "euclidean")
+
+# Hierarchical clustering using Complete Linkage
+hc1 <- hclust(d, method = "complete" )
+
+# Plot the obtained dendrogram
+plot(hc1, cex = 0.6, hang = -1)
+```
+
+## K-means clustering 
+
+```{r}
+fviz_nbclust(music_num_for_clustering, kmeans, method = "wss")
+```
+```{r}
+set.seed(1)
+
+km <- kmeans(music_num_for_clustering, centers = 5, nstart = 25)
+km
+```
+
+```{r}
+fviz_cluster(km, data = music_num_for_clustering)
+```
+```{r}
+km$iter
+```
+
+
+```{r}
+install.packages("psych")
+```
+```{r}
+km.res <- eclust(music_num_for_clustering, k = 5, nstart=25, graph = FALSE)
+```
+
+
+```{r}
+fviz_silhouette(km.res, palette='jco', ggtheme = theme_classic())
+
+```
+
+ 
+ 
+ 
+## Hotelling's T2 test for categorical variable explicit
+
+```{r}
+set.seed(10)
+hypothesisData <- musicData[ ,c(9:13, 15:20)]
+hypothesisData <- sample_n(hypothesisData, 5000, replace = FALSE, prob = NULL)
+explicitLabel <- hypothesisData$explicit
+hypothesisData$explicit <- NULL
+hypothesisData
+ 
+```
+```{r}
+install.packages("mvnormtest")
+```
+
+
+```{r}
+library(mvnormtest)
+```
+
+
+## Testing normality using mshapiro test
+```{r}
+mshapiro.test(t(hypothesisData))
+```
+
+```{r}
+det(cov(hypothesisData))
+```
+
+```{r}
+install.packages('ICSNP')
+```
+
+
+```{r}
+library(ICSNP)
+```
+
+```{r}
+HotellingsT2(filter(hypothesisData, explicitLabel == "TRUE")[, 1:10],
+             filter(hypothesisData, explicitLabel == "FALSE")[, 1:10])
+```
+
+## PCA
+```{r}
+music_num_for_pca <- music_num
+
+library(tidyverse)
+pca_results <- prcomp(music_num_for_pca, scale = T)
+```
+
+```{r}
+pca_results$rotation <- -1*pca_results$rotation
+pca_results$rotation
+```
+```{r}
+pca_results$sdev / sum(pca_results$sdev^2)
+```
+
+```{r}
+var_explained <- pca_results$sdev^2 / sum(pca_results$sdev^2)
+```
+
+```{r}
+library(ggplot2)
+
+qplot(1:11, var_explained) +
+  geom_line() +
+  geom_point(size=4)+
+  xlab("Principal Component") +
+  ylab("Variance Explained") +
+  ggtitle("Scree Plot") +
+  ylim(0, 1)
+```
+
+
+## MDS
+```{r}
+mds <- cmdscale(d, eig = T, k=2)
+```
+```{r}
+mds$GOF
+```
+```{r}
+mds
+```
+
+
+## Canonical correlation
+
+
+```{r}
+dataset1_cancor <- music_num[ which(music_num$danceability>0.036), ]
+dataset2_cancor <- music_num[ which(music_num$danceability<=0.036), ]
+dataset2_cancor <- dataset2_cancor[-c(0:8), ]
+```
+
+```{r}
+dataset1_cancor
+dataset2_cancor
+```
+
+```{r}
+install.packages("CCA")
+
+```
+```{r}
+library(CCA)
+cc <- matcor(dataset1_cancor, dataset2_cancor)
+```
+
+```{r}
+cc$XYcor
+```
+
+```{r}
+cc1 <- cc(dataset1_cancor, dataset2_cancor)
+cc1$cor
+```
+
+```{r}
+canoncial_loadings <- comput(dataset1_cancor, dataset2_cancor, cc1)
+canoncial_loadings
+```
+
+```{r}
+cc_results$cor
+```
+
+## Outlier Detection
+```{r}
+# Scatter matrix
+pairs(music_num)
+```
+
+```{r}
+mahalanobis(music_num, colMeans(music_num), cov(music_num))
+
+```
+```{r}
+music_num$outlier <- "No"
+music_num$outlier[music_num$p < 0.05] <- "Yes" 
+```
+
+```{r}
+music_num$outlier[music_num$p < 0.05]
+```
+
+```{r}
+# New dataset without outliers
+music_num_no_outliers <-music_num[!(music_num$outlier == "Yes"),]
+music_num_no_outliers <- music_num_no_outliers[-c(12, 13, 14)]
+```
+
+## Revisiting techniques after outlier removal 
+
+```{r}
+music_num_no_outliers
+```
+
+## Same Techniques after removing outliers
+```{r}
+# correlation
+cors_2 <- cor(music_num_no_outliers)
+corrplot(cors_2, method = "number")
+```
+
+```{r}
+# covariance
+cov(music_num_no_outliers)
+```
+
+```{r}
+# LDA
+music_num_no_outliers[, -1] <- scale(music_num_no_outliers[, -1])
+music_num_no_outliers
+apply(music_num_no_outliers[, -1], 2, mean)
+apply(music_num_no_outliers[, -1], 2, sd)
+set.seed(1)
+
+# 70% for training 30% for test 
+sample2 <- sample(c(TRUE, FALSE), nrow(music_num_no_outliers), replace = TRUE, prob = c(0.7, 0.3))
+train2 <- music_num_no_outliers[sample, ]
+test2 <- music_num_no_outliers[!sample, ]
+train2
+test2
+
+```
+```{r}
+# LDA Model 2
+model2 <- lda(train2$key~., data = train2)
+model2
+```
+
+```{r}
+predicted <- predict(model, test)
+names(predicted)
+mean(predicted$class==test$key)
+
+```
+
+```{r}
+# hc clustering
+music_num_for_clustering2 <- music_num_no_outliers
+
+key_label2 <- music_num_for_clustering2$key
+
+music_num_for_clustering2$key <- NULL
+music_num_for_clustering2
+```
+
+```{r}
+# Dissimilarity matrix
+d2 <- dist(music_num_for_clustering2, method = "euclidean")
+
+# Hierarchical clustering using Complete Linkage
+hc2 <- hclust(d2, method = "complete" )
+
+# Plot the obtained dendrogram
+plot(hc2, cex = 0.6, hang = -1)
+```
+
+```{r}
+# k-means
+fviz_nbclust(music_num_for_clustering2, kmeans, method = "wss")
+```
+
+```{r}
+set.seed(1)
+
+km2 <- kmeans(music_num_for_clustering2, centers = 6, nstart = 25)
+km2
+```
+
+```{r}
+fviz_cluster(km2, data = music_num_for_clustering2)
+```
+
+```{r}
+# hotelling test
+set.seed(10)
+hypothesisData2 <- sample_n(music_num_for_clustering2, 4360, replace = FALSE, prob = NULL)
+explicitLabel <- hypothesisData2$explicit
+hypothesisData2
+
+HotellingsT2(filter(hypothesisData2, explicitLabel == "TRUE")[, 1:10],
+             filter(hypothesisData2, explicitLabel == "FALSE")[, 1:10])
+```
+
+```{r}
+# pca
+pca_results2 <- prcomp(music_num_no_outliers, scale = T)
+pca_results2$sdev / sum(pca_results2$sdev^2)
+```
+
+```{r}
+var_explained2 <- pca_results2$sdev^2 / sum(pca_results2$sdev^2)
+library(ggplot2)
+
+qplot(1:11, var_explained2) +
+  geom_line() +
+  geom_point(size=4)+
+  xlab("Principal Component") +
+  ylab("Variance Explained") +
+  ggtitle("Scree Plot") +
+  ylim(0, 1)
+```
+
+```{r}
+mds2 <- cmdscale(d2, eig = T, k=2)
+mds2$GOF
+```
+
+```{r}
+# cancor
+dataset1_cancor2 <- music_num_no_outliers[ which(music_num_no_outliers$danceability>-0.05), ]
+dataset2_cancor2 <- music_num_no_outliers[ which(music_num_no_outliers$danceability<=-0.05), ]
+dataset2_cancor2 <- dataset2_cancor[-c(0:51), ]
+
+```
+
+```{r}
+cc2 <- matcor(dataset1_cancor2, dataset2_cancor2)
+cc2 <- cc(dataset1_cancor2, dataset2_cancor2)
+cc2$cor
+```
+```{r}
+canoncial_loadings2 <- comput(dataset1_cancor2, dataset2_cancor2, cc2)
+canoncial_loadings2
+```
+```{r}
+head(musicData)
+```
+
+```{r}
+chisq.test(musicData$artists, musicData$explicit)
+```
+
+
