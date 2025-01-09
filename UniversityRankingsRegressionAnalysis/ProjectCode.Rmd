@@ -1,0 +1,300 @@
+---
+title: "RegressionProject"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+```{r}
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("corrplot")
+install.packages("car")
+install.packages("shiny")
+install.packages("shinydashboard")
+install.packages("MASS")
+```
+
+```{r}
+
+library("tidyverse")
+library("shiny")
+library("shinydashboard")
+library("car")
+library("corrplot")
+library("ggplot2")
+library("MASS")
+```
+## Importing Dataset
+```{r}
+library(readr)
+UniversityRankings <- read_csv("Project/UniversityRankings.csv")
+```
+## Check Missing Data
+```{r}
+cwur <- data.frame(UniversityRankings)
+colSums(is.na(cwur))
+```
+
+## Variables & Data types
+```{r}
+library("tidyverse")
+numeric_pred <- sapply(cwur, is.numeric)
+cwur_num <- cwur[numeric_pred]
+str(cwur_num)
+cwur_num %>% select(-1) -> num_predictors
+str(num_predictors)
+```
+## Analysis Before Fitting
+```{r}
+cors <- cor(cwur_num)
+corrplot(cors, method = "number")
+```
+```{r}
+init_model <- lm(score ~., data = cwur)
+summary(init_model)
+anova(init_model)
+```
+## Plots before fitting
+```{r}
+plot(init_model, which = 1, col=c("blue"))
+```
+
+```{r}
+hist(init_model$residuals)
+```
+
+```{r}
+plot(init_model, which = 2, color="blue")
+```
+## Calculate VIF
+```{r}
+eigen(cors)
+```
+```{r}
+eigen_v <- eigen(cors)
+eigen_values <- eigen_v$vectors
+```
+
+```{r}
+vif(init_model)
+```
+## Durbin Watson 
+```{r}
+durbinWatsonTest(init_model)
+```
+############################################################
+## Transformation of Variables
+### Slider 1
+```{r}
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+
+library(MASS)
+df=cwur_num # name your data df 
+
+slider=c(-2,2,0.05)
+data <-  data.frame(x=c(1,2,3,4),y=c(10,11,12,13))
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(sliderInput("Lambda","Lambda", min=slider[1], max=slider[2], step=slider[3], value=1)),
+  dashboardBody(
+    fluidRow(column(6,plotOutput('waveplot')))
+  ))
+
+server <- function(input, output, session) { 
+  output$waveplot <- renderPlot({
+#    yfxn<- function(df) { df^input$Lambda}
+    yfxn<- function(df) { ifelse(input$Lambda!=0, return(df^input$Lambda), return(log(df)) ) }
+    df1 <- yfxn(df)
+    df1 <- data.frame(df1)
+x=df1[,1]; y=df1[,2]
+    ggplot(df1,aes_string(x=x,y=y))+geom_point(size=2)+ 
+         scale_x_continuous()
+  })
+}
+shinyApp(ui, server)
+```
+```{r}
+transformed_model <- log10(cwur_num)
+trans_cor <- cor(transformed_model)
+corrplot(trans_cor, method = "number")
+summary(transformed_model)
+```
+## Graphs after fitting transformation
+```{r}
+model_1 <- lm(score ~., data = transformed_model)
+summary(model_1)
+```
+
+############################################################
+## PCA
+
+
+```{r}
+predictors_pca <- prcomp(num_predictors, center = TRUE, scale. = TRUE)
+```
+
+### Influence of each component
+```{r}
+summary(predictors_pca)
+```
+
+```{r}
+predictors_pca$rotation
+```
+
+
+```{r}
+predictors_pca$scale
+```
+
+```{r}
+predictors_pca$center
+```
+### New PCA Variables
+```{r}
+standardized_data <- scale(num_predictors)
+```
+
+### New variables
+```{r}
+final_data <- t(t(predictors_pca$rotation)%*%(t(standardized_data)))
+```
+
+```{r}
+View(final_data)
+```
+
+```{r}
+library("corrplot")
+pca_cors <- cor(final_data)
+pca_cors
+```
+```{r}
+corrplot(pca_cors, method = "number")
+```
+
+
+```{r}
+final_cwur <- as.data.frame(final_data)
+jpeg("pca_plot.png", quality = 75)
+plot(final_cwur)
+dev.off()
+```
+```{r}
+p_data <- data.frame(cbind(cwur$score, final_data[, c(1:5)]))
+View(p_data)
+```
+
+```{r}
+principal_model <- lm(p_data$V1 ~., data = p_data)
+summary(principal_model)
+```
+
+```{r}
+principal_model_1 <- lm(p_data$V1 ~p_data$PC1+p_data$PC3+p_data$PC4+p_data$PC5, data = p_data)
+summary(principal_model_1)
+cor(p_data)
+plot(principal_model_1, which = 1, col=c("blue"))
+hist(principal_model_1$residuals)
+plot(principal_model_1, which = 2, color="blue")
+```
+
+```{r}
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+
+library(MASS)
+df=p_data # name your data df 
+
+slider=c(-2,2,0.05)
+data <-  data.frame(x=c(1,2,3,4),y=c(10,11,12,13))
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(sliderInput("Lambda","Lambda", min=slider[1], max=slider[2], step=slider[3], value=1)),
+  dashboardBody(
+    fluidRow(column(6,plotOutput('waveplot')))
+  ))
+
+server <- function(input, output, session) { 
+  output$waveplot <- renderPlot({
+#    yfxn<- function(df) { df^input$Lambda}
+    yfxn<- function(df) { ifelse(input$Lambda!=0, return(df^input$Lambda), return(log(df)) ) }
+    df1 <- yfxn(df)
+    df1 <- data.frame(df1)
+x=df1[,1]; y=df1[,2]
+    ggplot(df1,aes_string(x=x,y=y))+geom_point(size=2)+ 
+         scale_x_continuous()
+  })
+}
+shinyApp(ui, server)
+
+```
+ 
+```{r}
+transformed_p_data <- p_data^2
+summary(transformed_p_data)
+```
+```{r}
+final <- lm(transformed_p_data$V1 ~., data = transformed_p_data)
+summary(final)
+```
+## Leverage values 
+```{r}
+hats <- as.data.frame(hatvalues(final))
+head(hats)
+```
+
+```{r}
+head(hats[order(-hats['hatvalues(final)']), ])
+```
+
+```{r}
+plot(hatvalues(final), type = 'h')
+```
+## Cooks
+```{r}
+cooksD <- cooks.distance(final)
+head(cooksD)
+```
+
+```{r}
+n <- nrow(transformed_p_data)
+plot(cooksD, main = "Cooks Distance for Influential Obs")
+abline(h = 4/n, lty = 2, col = "steelblue")
+```
+## AIC & BIC
+```{r}
+AIC(init_model)
+AIC(final)
+
+BIC(final)
+```
+## Removing outliers
+```{r}
+z_scores <- as.data.frame(sapply(transformed_p_data, function(transformed_p_data) (abs(transformed_p_data-mean(transformed_p_data))/sd(transformed_p_data))))
+```
+
+```{r}
+head(z_scores)
+```
+```{r}
+no_outliers <- z_scores[!rowSums(z_scores>3), ]
+```
+
+```{r}
+dim(no_outliers)
+```
+
+```{r}
+another_model <- lm(no_outliers$V1 ~., data = no_outliers)
+summary(another_model)
+```
+
+
