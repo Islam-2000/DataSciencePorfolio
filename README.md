@@ -23,6 +23,28 @@ What's Inside?
         exported to Google Sheets for analysis and building a comprehensive dashboard.
         Skills Used: SQL, MySQL, Exploratory Data Analysis (EDA), Data Cleaning, Data Analysis, Dashboard Design
 
+    Project 5: Multi-Class Texture Classification Using Error-Correcting Output Codes and Gaussian Mixture Models
+        This project covers the results of applying supervised and unsupervised machine learning algorithms in ECOC and GMM 
+        respectively. Data preparation and preprocessing methods are highlighted alongside some other techniques such as dimensionality reduction 
+        and feature engineering performed on the Describable Texture Dataset (DTD).
+        
+    Project 7: 
+
+    Project 8: 
+
+    Project 9: 
+
+    Project 10: 
+
+    Project 11: 
+
+    Project 12: 
+
+    Project 13:
+
+    Project 14: 
+
+
         
 ## Why Explore This Portfolio?
 
