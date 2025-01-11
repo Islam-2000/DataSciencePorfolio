@@ -53,7 +53,42 @@ What's Inside?
 
         Skills: Feature Extraction, Clustering, Computer Vision, Image Analysis
         
-    Project 8: 
+    Project 8: Music Genre Classification using Convolutional Neural Networks and Machine Learning Classifiers
+        The purpose of this project was to explore and classify different music genres I loved using neural networks
+        with an emphasis on feature extraction methods such as extracting Mel-Frequency Cepstral Coefficients and 
+        others. A variety of supervised classifiers were also deployed in tandem with the proposed algorithm. 
+        Results indicated that the proposed deep learning algorithm outperformed all supervised classifiers.
+
+        Skills: Deep Learning, Feature Extraction, Hyperparameter Optimization, Music Data Extraction & Analysis
+
+    Project 9: Data Visualization and Mining on Music Track Features
+        I employed various techniques in this data mining project including PCA, univariate & bivariate data 
+        exploration, multivariate outlier detection methods, cluster analysis, and more. This was operated on a
+        collection of music track features such as tempo, energy, loudness, etc..
+
+        Skills: Data Visualization, Cluster Analysis, Multidimensional Scaling, Outlier Detection, Association Methods
+
+    Project 10: Predicting Power Output of Solar Panels in Cairo, Egypt
+        This paper analyses recent historical weather data in Cairo and performs predictive analytics using various
+        machine learning algorithms such as MLP, Lasso Regression, and others to identify the most effective 
+        model. A certain limitation of this experiment was the lack of recent data, which made our analysis slightly
+        outdated for conducting our research.
+
+        Skills: Regression, Exploratory Data Analysis, Data Cleaning & Transformation, Hyperparameter Optimization
+
+    Project 11: Optimizing Production to Maximize Profit
+        This project investigated Saudi Food Company data and optimized a linear programming problem for optimizing
+        the production of 10 different juice flavors to maximize the company's profit and optimize the production 
+        schedule by utilizing sensitivity analysis.
+
+        Skills: Linear Programming, Sensitivity Analysis, Problem Formulation, Simplex & Dual Methods
+
+    Project 12: Regression Analysis on World University Rankings
+        Regression analysis was performed on the Center for World University Rankings (CWUR) dataset. A collection
+        of tests were conducted on the data such as transformation of variables, regression diagnostics, outlier
+        identification, leverage points, influential observations, and model fitting. 
+
+        Skills: Regression Analysis, Outlier Detection, Data Exploration
 
 
         
