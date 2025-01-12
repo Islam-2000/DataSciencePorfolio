@@ -90,6 +90,19 @@ What's Inside?
 
         Skills: Regression Analysis, Outlier Detection, Data Exploration
 
+    Project 13: Student Degree Recommendation System
+        My proposed outline for this project consisted of exploring and analysing university student's high school
+        grades and based on that recommending a particular degree suitable to their proficiency in certain courses.
+        The proposed pipeline was data exploration followed by a series of preprocessing procedures including feature
+        encoding, outlier detection, and data augmentation. Furthermore, feature selection and various models were
+        optimized and deployed to analyze this dataset. Model interpretations were performed using 3 key techniques:
+        Feature importance, Partial dependence plots, and Shapley values.
+
+        Skills: Data Exploration, Data Preprocessing, Feature Selection, Model Selection & Optimization, 
+            Local Model Interpretations
+
+        
+
 
         
 ## Why Explore This Portfolio?
